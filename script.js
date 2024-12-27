@@ -1,7 +1,29 @@
-// Spotify API configuration
-if (typeof config === 'undefined') {
-    console.error('Config not found! Please create a config.js file, see README.md for more information');
-}
+// Local songs configuration
+const SONGS = [
+    {
+        file: 'Maddy-Soma-OKE.mp4',
+        title: 'Oke',
+        artist: 'Maddy Soma',
+        cover: 'album-cover-oke.png'
+    },
+    {
+        file: 'Falling-In-Reverse-Prequel.mp4',
+        title: 'Prequel',
+        artist: 'Falling In Reverse',
+        cover: 'album-cover-prequel.png'
+    },
+    {
+        file: 'Godsmack-Bulletproof.mp4',
+        title: 'Bulletproof',
+        artist: 'Godsmack',
+        cover: 'album-cover-bulletproof.png'
+    }
+];
+
+// Player state
+let currentSongIndex = Math.floor(Math.random() * SONGS.length);
+let isAudioInitialized = false;
+let isMusicPlaying = false;
 
 // Star trail effect
 let lastX = 0;
@@ -119,33 +141,6 @@ let lastTrackData = null;
 let lastCheckTime = 0;
 const CACHE_DURATION = 5000; // 5 seconds cache
 
-// Local songs configuration
-const SONGS = [
-    {
-        file: 'Maddy-Soma-OKE.mp4',
-        title: 'Oke',
-        artist: 'Maddy Soma',
-        cover: 'album-cover-oke.png'
-    },
-    {
-        file: 'Falling-In-Reverse-Prequel.mp4',
-        title: 'Prequel',
-        artist: 'Falling In Reverse',
-        cover: 'album-cover-prequel.png'
-    },
-    {
-        file: 'Godsmack-Bulletproof.mp4',
-        title: 'Bulletproof',
-        artist: 'Godsmack',
-        cover: 'album-cover-bulletproof.png'
-    }
-];
-
-// Player state
-let currentSongIndex = Math.floor(Math.random() * SONGS.length);
-let isAudioInitialized = false;
-let isMusicPlaying = false;
-
 // Create audio element
 const audioPlayer = new Audio();
 audioPlayer.volume = 1.0;
@@ -165,6 +160,7 @@ songInfo.innerHTML = `
     <div class="song-title">Checking Spotify...</div>
     <div class="artist-name">via Last.fm</div>
 `;
+albumCover.src = 'happy-trollge-trollge.gif';  // Show GIF while checking
 
 const controls = document.createElement('div');
 controls.className = 'player-controls';
@@ -218,6 +214,7 @@ function pauseMusic() {
 
 // track Spotify state
 let isSpotifyPlaying = false;
+let isPlayingSequence = true;
 
 // Update the toggleMusic function
 function toggleMusic() {
@@ -270,16 +267,6 @@ function initializeAudio() {
 // Update the checkSpotifyPlaying function
 async function checkSpotifyPlaying() {
     try {
-        // If no API key is configured, skip Spotify check and go straight to local playback
-        if (!config.LASTFM_API_KEY) {
-            console.log('No Last.fm API key found, running in demo mode');
-            songInfo.querySelector('.song-title').textContent = 'Demo Mode';
-            songInfo.querySelector('.artist-name').textContent = 'Click for local playback';
-            albumCover.src = 'album-cover-oke.png';
-            initializeAudio();
-            return false;
-        }
-
         const now = Date.now();
         
         if (lastTrackData && (now - lastCheckTime) < CACHE_DURATION) {
@@ -289,15 +276,13 @@ async function checkSpotifyPlaying() {
 
         playerContainer.classList.add('loading');
         
-        const lastfmUrl = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${config.SPOTIFY_USER_ID}&api_key=${config.LASTFM_API_KEY}&format=json&limit=1`;
-        
-        const response = await fetch(lastfmUrl, {
-            mode: 'cors',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        // Use Cloudflare Worker
+        const response = await fetch('https://spring-tooth-3a41.golonchy-aitta.workers.dev');
+        if (!response.ok) {
+            // If error, show looping GIF
+            albumCover.src = 'happy-trollge-trollge.gif';
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
         const data = await response.json();
         const track = data.recenttracks?.track?.[0];
@@ -315,18 +300,26 @@ async function checkSpotifyPlaying() {
         return isPlaying;
     } catch (error) {
         console.error('Error checking status:', error);
+        // Show looping GIF on error
+        albumCover.src = 'happy-trollge-trollge.gif';
     }
 }
 
 // Update player UI with track data
 function updatePlayerWithTrackData(trackData) {
     if (trackData.isPlaying) {
+        // Display Spotify track info
         songInfo.querySelector('.song-title').textContent = trackData.name;
         songInfo.querySelector('.artist-name').textContent = trackData.artist;
         albumCover.src = trackData.imageUrl;
 
-        if (isMusicPlaying) {
-            pauseMusic();
+        // Play background music without changing display info
+        if (!isMusicPlaying) {
+            audioPlayer.src = 'play-when-spotify-detected.mp4';
+            audioPlayer.loop = true;
+            audioPlayer.play().then(() => {
+                isMusicPlaying = true;
+            }).catch(console.error);
         }
 
         const unmuteBanner = document.querySelector('.unmute-banner');
@@ -344,6 +337,7 @@ function updatePlayerWithTrackData(trackData) {
             playPauseBtn.style.cursor = 'not-allowed';
         }
     } else {
+        audioPlayer.loop = false;
         isSpotifyPlaying = false;
         
         // Re-enable play button when Spotify is not playing
@@ -361,9 +355,11 @@ function updatePlayerWithTrackData(trackData) {
 
 // Audio event listeners
 audioPlayer.addEventListener('ended', () => {
-    if (isPlayingSequence) {
-        currentSongIndex = (currentSongIndex + 1) % SONGS.length;
-        playCurrentSong();
+    if (isSpotifyPlaying) {
+        audioPlayer.currentTime = 0;
+        audioPlayer.play().catch(console.error);
+    } else if (isPlayingSequence) {
+        playNextSong();
     }
 });
 
@@ -384,51 +380,46 @@ audioPlayer.addEventListener('loadstart', () => {
     }
 });
 
-// track initial check
-let initialCheckTimeout;
-
 // Update the checkSpotifyStatus function
 async function checkSpotifyStatus() {
     playerContainer.classList.add('loading');
     try {
         const isPlaying = await checkSpotifyPlaying();
         if (!isPlaying && !isAudioInitialized) {
-            songInfo.querySelector('.song-title').textContent = 'No Spotify status';
-            songInfo.querySelector('.artist-name').textContent = 'Click somewhere on page';
-            albumCover.src = 'album-cover-oke.png';
-            initializeAudio();
+            initializeLocalPlayback();
         }
     } catch (error) {
         console.error(error);
         if (!isAudioInitialized) {
-            songInfo.querySelector('.song-title').textContent = 'No Spotify status';
-            songInfo.querySelector('.artist-name').textContent = 'Click somewhere on page';
-            albumCover.src = 'album-cover-oke.png';
-            initializeAudio();
+            initializeLocalPlayback();
         }
     } finally {
         playerContainer.classList.remove('loading');
     }
 }
 
+// Add this helper function for repeated code
+function initializeLocalPlayback() {
+    songInfo.querySelector('.song-title').textContent = 'No Spotify status';
+    songInfo.querySelector('.artist-name').textContent = 'Click somewhere on page';
+    albumCover.src = 'happy-trollge-trollge.gif';
+    initializeAudio();
+}
+
 // Update the window load event listener
 window.addEventListener('load', () => {
-    // Initial check
     checkSpotifyStatus();
     
-    // If no response after 5 seconds, show the message
     setTimeout(() => {
         if (songInfo.querySelector('.song-title').textContent === 'Checking Spotify...') {
             songInfo.querySelector('.song-title').textContent = 'No Spotify status';
             songInfo.querySelector('.artist-name').textContent = 'Click somewhere on page';
-            albumCover.src = 'album-cover-oke.png';
+            albumCover.src = 'happy-trollge-trollge.gif';
             initializeAudio();
         }
     }, 5000);
 
-    // Continue polling
-    const POLL_INTERVAL = 30000; // 30 seconds
-    setInterval(checkSpotifyStatus, POLL_INTERVAL);
+    setInterval(checkSpotifyStatus, 30000);
 });
 
 // Initialize backgrounds
