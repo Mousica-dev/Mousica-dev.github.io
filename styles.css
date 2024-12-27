@@ -1,0 +1,464 @@
+body {
+    text-align: center;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: black;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    text-shadow: 0 0 10px #fff,
+                 0 0 20px #fff,
+                 0 0 30px #fff;
+}
+
+img:not(.main-icon) {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border: 2px solid white;
+    box-shadow: 
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 30px #fff;
+}
+
+.social-links {
+    margin-top: 30px;
+    z-index: 1;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.social-links a {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    width: 48px;
+    height: 48px;
+}
+
+.social-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: black;
+    padding: 8px;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8))
+           drop-shadow(0 0 16px rgba(255, 255, 255, 0.6));
+    transition: all 0.3s ease;
+    object-fit: contain;
+}
+
+.social-links a:hover {
+    transform: scale(1.1);
+}
+
+.social-links a:hover .social-icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9))
+           drop-shadow(0 0 24px rgba(255, 255, 255, 0.7))
+           drop-shadow(0 0 36px rgba(255, 255, 255, 0.5));
+}
+
+.star {
+    position: absolute;
+    pointer-events: none;
+    width: 12px;
+    height: 12px;
+    background: rgba(200, 200, 200, 0.4);
+    border-radius: 50%;
+    animation: fade-out 2s linear forwards;
+    filter: blur(4px);
+    box-shadow: 
+        0 0 20px 5px rgba(200, 200, 200, 0.4),
+        0 0 40px 8px rgba(200, 200, 200, 0.3),
+        0 0 60px 12px rgba(200, 200, 200, 0.2);
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 0.6;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+}
+
+.main-icon {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8))
+           drop-shadow(0 0 30px rgba(255, 255, 255, 0.6))
+           drop-shadow(0 0 45px rgba(255, 255, 255, 0.4));
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.main-icon:hover {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.9))
+           drop-shadow(0 0 40px rgba(255, 255, 255, 0.7))
+           drop-shadow(0 0 60px rgba(255, 255, 255, 0.5));
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at center, rgba(25, 25, 35, 0.8) 0%, rgba(0, 0, 0, 1) 100%),
+        linear-gradient(45deg, rgba(38, 0, 64, 0.3), rgba(0, 24, 64, 0.3));
+    z-index: -2;
+    animation: gradientShift 15s ease-in-out infinite;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.08"/></svg>');
+    z-index: -1;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        transform: scale(1);
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: hue-rotate(30deg);
+    }
+}
+
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.star-background {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--duration) ease-in-out infinite;
+    animation-delay: var(--delay);
+    opacity: var(--brightness);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.star-background.small {
+    width: 2px;
+    height: 2px;
+}
+
+.star-background.medium {
+    width: 3px;
+    height: 3px;
+}
+
+.star-background.large {
+    width: 4px;
+    height: 4px;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: var(--brightness); }
+    50% { opacity: calc(var(--brightness) * 0.3); }
+}
+
+.space-object {
+    position: fixed;
+    border-radius: 50%;
+    z-index: -1;
+    transition: opacity 1.5s ease;
+}
+
+.space-object.fade-out {
+    opacity: 0.1;
+}
+
+.sun {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500);
+    box-shadow: 0 0 60px #ffd700;
+    animation: glow 4s ease-in-out infinite;
+}
+
+.earth {
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle at 30% 30%, #4B9CD3, #13294B);
+    box-shadow: 0 0 20px rgba(75, 156, 211, 0.6);
+    animation: orbit var(--orbit-duration) linear infinite;
+}
+
+.mars {
+    width: 25px;
+    height: 25px;
+    background: radial-gradient(circle at 30% 30%, #FF6B6B, #A52A2A);
+    box-shadow: 0 0 18px rgba(255, 107, 107, 0.6);
+    animation: orbit var(--orbit-duration) linear infinite;
+}
+
+.jupiter {
+    width: 45px;
+    height: 45px;
+    background: radial-gradient(circle at 30% 30%, #E8B882, #A0522D);
+    box-shadow: 0 0 25px rgba(232, 184, 130, 0.6);
+    animation: orbit var(--orbit-duration) linear infinite;
+}
+
+.saturn {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 30% 30%, #F4C542, #DAA520);
+    box-shadow: 0 0 22px rgba(244, 197, 66, 0.6);
+    animation: orbit var(--orbit-duration) linear infinite;
+}
+
+.pluto {
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at 30% 30%, #BDBDBD, #757575);
+    box-shadow: 0 0 15px rgba(189, 189, 189, 0.6);
+    animation: orbit var(--orbit-duration) linear infinite;
+}
+
+/* Smooth floating animation */
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(10px, -10px) scale(1.02);
+    }
+    50% {
+        transform: translate(0, -15px) scale(1);
+    }
+    75% {
+        transform: translate(-10px, -10px) scale(0.98);
+    }
+}
+
+/* Orbital rotation animation */
+@keyframes orbit {
+    from {
+        transform: rotate(0deg) translateX(30px) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) translateX(30px) rotate(-180deg) scale(1.1);
+    }
+    to {
+        transform: rotate(360deg) translateX(30px) rotate(-360deg) scale(1);
+    }
+}
+
+/* Sun glow animation */
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 
+            0 0 60px #ffd700,
+            0 0 120px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        box-shadow: 
+            0 0 80px #ffd700,
+            0 0 160px rgba(255, 215, 0, 0.6);
+    }
+}
+
+/* Remove the old animations */
+.space-object:nth-child(odd),
+.space-object:nth-child(even) {
+    animation-duration: initial;
+}
+
+/* Add a wrapper for the main content */
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+iframe#bgMusic {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    border: 0;
+    pointer-events: none;
+}
+
+.unmute-banner {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.9em;
+    z-index: 2000;
+    animation: fadeInOut 2s ease-in-out infinite;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.music-player {
+    position: relative;
+    margin: 0 auto 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.album-cover {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid white;
+    box-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 15px #fff;
+}
+
+.song-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.song-title {
+    font-weight: bold;
+    font-size: 0.9em;
+    text-shadow: 0 0 5px #fff;
+    width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.2;
+    color: white;
+}
+
+.artist-name {
+    font-size: 0.8em;
+    opacity: 0.8;
+    width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    color: white;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+}
+
+.play-pause {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 1.2em;
+    transition: transform 0.2s;
+}
+
+.play-pause:hover {
+    transform: scale(1.1);
+}
+
+.play-pause:active {
+    transform: scale(0.95);
+}
+
+.unmute-banner {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.9em;
+    z-index: 2000;
+    animation: fadeInOut 2s ease-in-out infinite;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.music-player.loading .song-info {
+    opacity: 0.7;
+}
+
+.music-player.loading .album-cover {
+    filter: brightness(0.8);
+}
+
+.play-pause[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.play-pause:not([disabled]):hover {
+    transform: scale(1.1);
+}
+
+.play-pause:not([disabled]):active {
+    transform: scale(0.95);
+}

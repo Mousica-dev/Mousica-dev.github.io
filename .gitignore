@@ -1,0 +1,9 @@
+# Ignore config file with API keys
+config.js
+
+# Ignore common system files
+.DS_Store
+Thumbs.db
+
+# Ignore node modules if you use them
+node_modules/ 
