@@ -1,3 +1,8 @@
+// Spotify API configuration
+if (typeof config === 'undefined') {
+    console.error('Config not found! Please create a config.js file, see README.md for more information');
+}
+
 // Star trail effect
 let lastX = 0;
 let lastY = 0;
@@ -106,15 +111,8 @@ function handlePlanetHover() {
             );
             planet.classList.toggle('fade-out', distance < mouseThreshold);
         });
-    });
+    })
 }
-
-// Spotify API configuration with fallback for GitHub Pages
-const config = {
-    LASTFM_API_KEY: typeof window.config !== 'undefined' ? window.config.LASTFM_API_KEY : null,
-    SPOTIFY_USER_ID: typeof window.config !== 'undefined' ? window.config.SPOTIFY_USER_ID : 'Mousica-dev',
-    SPOTIFY_POLL_INTERVAL: 30000
-};
 
 // Cache for Last.fm data
 let lastTrackData = null;
@@ -269,7 +267,7 @@ function initializeAudio() {
     document.addEventListener('click', handleFirstClick);
 }
 
-// Spotify integration
+// Update the checkSpotifyPlaying function
 async function checkSpotifyPlaying() {
     try {
         // If no API key is configured, skip Spotify check and go straight to local playback
@@ -311,32 +309,12 @@ async function checkSpotifyPlaying() {
             artist: track?.artist['#text'] || 'Unknown Artist',
             imageUrl: track?.image?.find(img => img.size === 'large')?.[`#text`] || 'album-cover-oke.png'
         };
-        lastCheckTime = now;
+        lastCheckTime = Date.now();
 
         updatePlayerWithTrackData(lastTrackData);
         return isPlaying;
     } catch (error) {
-        console.error('Error checking Last.fm:', error);
-        
-        // Update UI to show no Spotify status
-        songInfo.querySelector('.song-title').textContent = 'No Spotify status';
-        songInfo.querySelector('.artist-name').textContent = 'Click somewhere on page';
-        albumCover.src = 'album-cover-oke.png'; // Default album cover
-        
-        // Enable local playback
-        isSpotifyPlaying = false;
-        const playPauseBtn = document.querySelector('.play-pause');
-        if (playPauseBtn) {
-            playPauseBtn.style.opacity = '1';
-            playPauseBtn.style.cursor = 'pointer';
-        }
-
-        if (!isMusicPlaying && !isAudioInitialized) {
-            initializeAudio();
-        }
-        return false;
-    } finally {
-        playerContainer.classList.remove('loading');
+        console.error('Error checking status:', error);
     }
 }
 
@@ -449,7 +427,8 @@ window.addEventListener('load', () => {
     }, 5000);
 
     // Continue polling
-    setInterval(checkSpotifyStatus, config.SPOTIFY_POLL_INTERVAL);
+    const POLL_INTERVAL = 30000; // 30 seconds
+    setInterval(checkSpotifyStatus, POLL_INTERVAL);
 });
 
 // Initialize backgrounds
