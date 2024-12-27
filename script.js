@@ -109,10 +109,12 @@ function handlePlanetHover() {
     });
 }
 
-// Spotify API configuration
-if (typeof config === 'undefined') {
-    console.error('Config not found! Please create a config.js file, see README.md for more information');
-}
+// Spotify API configuration with fallback for GitHub Pages
+const config = {
+    LASTFM_API_KEY: typeof window.config !== 'undefined' ? window.config.LASTFM_API_KEY : null,
+    SPOTIFY_USER_ID: typeof window.config !== 'undefined' ? window.config.SPOTIFY_USER_ID : 'Mousica-dev',
+    SPOTIFY_POLL_INTERVAL: 30000
+};
 
 // Cache for Last.fm data
 let lastTrackData = null;
@@ -270,6 +272,16 @@ function initializeAudio() {
 // Spotify integration
 async function checkSpotifyPlaying() {
     try {
+        // If no API key is configured, skip Spotify check and go straight to local playback
+        if (!config.LASTFM_API_KEY) {
+            console.log('No Last.fm API key found, running in demo mode');
+            songInfo.querySelector('.song-title').textContent = 'Demo Mode';
+            songInfo.querySelector('.artist-name').textContent = 'Click for local playback';
+            albumCover.src = 'album-cover-oke.png';
+            initializeAudio();
+            return false;
+        }
+
         const now = Date.now();
         
         if (lastTrackData && (now - lastCheckTime) < CACHE_DURATION) {

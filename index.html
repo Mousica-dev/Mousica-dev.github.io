@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="config.js"></script>
+    <script>
+        // Check if we're running on GitHub Pages
+        if (window.location.hostname.includes('github.io')) {
+            console.log('Running on GitHub Pages - Demo Mode');
+        } else {
+            // Load config.js only in local development
+            document.write('<script src="config.js"><\/script>');
+        }
+    </script>
 </head>
 <body>
     <div class="space-background"></div>
