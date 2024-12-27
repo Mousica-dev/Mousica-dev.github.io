@@ -65,7 +65,7 @@ function createStarryBackground() {
         star.style.left = `${margin + Math.random() * (100 - 2 * margin)}%`;
         star.style.top = `${margin + Math.random() * (100 - 2 * margin)}%`;
         
-        // Faster star animation
+        // Fast(er) star animation
         star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
         star.style.setProperty('--delay', `${Math.random() * 3}s`);
         star.style.setProperty('--brightness', `${0.5 + Math.random() * 0.5}`);
@@ -111,7 +111,7 @@ function handlePlanetHover() {
 
 // Spotify API configuration
 if (typeof config === 'undefined') {
-    console.error('Config not found! Please create a config.js file based on config.sample.js');
+    console.error('Config not found! Please create a config.js file, see README.md for more information');
 }
 
 // Cache for Last.fm data
