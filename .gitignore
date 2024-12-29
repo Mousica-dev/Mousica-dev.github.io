@@ -1,6 +1,7 @@
-# Ignore common system files
 .DS_Store
 Thumbs.db
 
-# Ignore node modules if you use them
 node_modules/
+
+.tmp.driveupload/
+*.tmp.driveupload

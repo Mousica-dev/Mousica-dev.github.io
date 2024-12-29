@@ -3,28 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>🙈 Mousica's Wubsoot</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="icon" type="image/png" href="assets/images/Wave-icon.png">
 </head>
 <body>
     <div class="space-background"></div>
+    <div class="stars"></div>
+    <div class="space-object sun" style="--orbit-duration: 8s; animation-delay: 0s; top: 15%; left: 10%;"></div>
+    <div class="space-object earth" style="--orbit-duration: 60s; animation-delay: 4s; top: 25%; left: 75%;"></div>
+    <div class="space-object mars" style="--orbit-duration: 80s; animation-delay: 8s; top: 65%; left: 20%;"></div>
+    <div class="space-object jupiter" style="--orbit-duration: 70s; animation-delay: 2s; top: 40%; left: 85%;"></div>
+    <div class="space-object saturn" style="--orbit-duration: 90s; animation-delay: 6s; top: 80%; left: 60%;"></div>
+    <div class="space-object pluto" style="--orbit-duration: 100s; animation-delay: 10s; top: 10%; left: 40%;"></div>
     <div class="content-wrapper">
-        <img src="wave-icon.png" alt="Wave Illustration" class="main-icon">
+        <img src="assets/images/Wave-icon.png" alt="Wave" class="main-icon">
         <h1>I like programming and music</h1>
         
         <div class="social-links">
             <a href="https://github.com/Mousica-dev" target="_blank">
-                <img src="github-icon.png" alt="GitHub" class="social-icon">
+                <img src="assets/images/Github-icon.png" alt="GitHub" class="social-icon">
             </a>
             <a href="https://open.spotify.com/user/31igu3pgnpy62jotq2jpvcy3rhkm" target="_blank">
-                <img src="spotify-icon.png" alt="Spotify" class="social-icon">
+                <img src="assets/images/Spotify-icon.png" alt="Spotify" class="social-icon">
             </a>
             <a href="https://discordapp.com/users/1303051094036975720" target="_blank">
-                <img src="discord-icon.png" alt="Discord" class="social-icon">
+                <img src="assets/images/Discord-icon.png" alt="Discord" class="social-icon">
             </a>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Initialize stars immediately
+        (function() {
+            const starsContainer = document.querySelector('.stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star-background';
+                
+                const sizeClass = Math.random() < 0.6 ? 'small' : 
+                                Math.random() < 0.9 ? 'medium' : 'large';
+                star.classList.add(sizeClass);
+                
+                star.style.left = `${5 + Math.random() * 90}%`;
+                star.style.top = `${5 + Math.random() * 90}%`;
+                star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
+                star.style.setProperty('--delay', `${Math.random() * 3}s`);
+                star.style.setProperty('--brightness', `${0.5 + Math.random() * 0.5}`);
+                
+                starsContainer.appendChild(star);
+            }
+        })();
+    </script>
 </body>
 </html> 

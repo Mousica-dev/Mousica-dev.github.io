@@ -342,17 +342,28 @@ iframe#bgMusic {
     margin: 0 auto 40px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 15px;
     padding: 15px;
     display: flex;
     align-items: center;
     gap: 15px;
     z-index: 1000;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2),
+                0 0 50px rgba(255, 255, 255, 0.1),
+                0 0 70px rgba(255, 255, 255, 0.1);
     max-width: 400px;
     width: 100%;
     box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.music-player:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3),
+                0 0 60px rgba(255, 255, 255, 0.2),
+                0 0 80px rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 .album-cover {
@@ -360,11 +371,18 @@ iframe#bgMusic {
     height: 50px;
     border-radius: 8px;
     object-fit: cover;
-    border: 1px solid white;
-    box-shadow: 
-        0 0 5px #fff,
-        0 0 10px #fff,
-        0 0 15px #fff;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 40px rgba(255, 255, 255, 0.4),
+                0 0 60px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.album-cover:hover {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.7),
+                0 0 50px rgba(255, 255, 255, 0.5),
+                0 0 75px rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
 }
 
 .song-info {
@@ -378,24 +396,27 @@ iframe#bgMusic {
 
 .song-title {
     font-weight: bold;
-    font-size: 0.9em;
-    text-shadow: 0 0 5px #fff;
-    width: 100%;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    line-height: 1.2;
+    font-size: 1.2em;
+    text-shadow: 0 0 15px #fff,
+                 0 0 30px #fff,
+                 0 0 45px #fff;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
     color: white;
+    transition: text-shadow 0.3s ease;
+}
+
+.song-title:hover {
+    text-shadow: 0 0 20px #fff,
+                 0 0 40px #fff,
+                 0 0 60px #fff;
 }
 
 .artist-name {
-    font-size: 0.8em;
-    opacity: 0.8;
-    width: 100%;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    color: white;
+    font-size: 0.85em;
+    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
 .player-controls {
