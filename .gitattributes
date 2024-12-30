@@ -1,0 +1,2 @@
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+assets/audio/play-when-spotify-is-detected.mp4 filter=lfs diff=lfs merge=lfs -text 
